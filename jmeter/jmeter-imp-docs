@@ -1,0 +1,118 @@
+
+
+
+
+scp google_test.jmx ubuntu@18.210.15.214:.
+
+scp -o ProxyCommand="ssh -p 22 -A -W %h:%p ec2-user@34.236.254.153" "/Users/hslh15412/ganesh/git repo/GeneralReferenceCode/jmeter-master-slave-setup-aws/google_test.jmx" "ubuntu@172.31.12.84:/home/ubuntu/google_test.jmx"
+
+scp "/Users/hslh15412/ganesh/git repo/GeneralReferenceCode/jmeter-master-slave-setup-aws/google_test.jmx" "ubuntu@3.235.136.188:/home/ubuntu/google_test.jmx"
+
+
+
+********************    Jmeter slave setup *******************
+
+2. start jmeter server on slave : 
+
+	2.1  wget http://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.6.2.tgz
+	2.3  tar xf apache-jmeter-5.6.2.tgz
+	2.4 chmod 777 apache-jmeter-5.6.2
+	2.5 sudo cp -r apache-jmeter-5.6.2 /usr/bin/apache-jmeter-5.6.2
+	2.6 sudo apt-get update && sudo apt-get install default-jre -y
+	2.6 change ssl required to false and increase heap:
+		sudo vi /usr/bin/apache-jmeter-5.6.2/bin/user.properties
+
+		modify :  server.rmi.ssl.disable=true
+
+		sudo vi /usr/bin/apache-jmeter-5.6.2/bin/jmeter
+
+		modify xmx to 3 gb for 4 gb machine: "${HEAP:="-Xms3g -Xmx3g -XX:MaxMetaspaceSize=256m"}"
+
+	2.6 start server manually on slave 
+		/usr/bin/apache-jmeter-5.6.2/bin/jmeter-server
+	2.7 create script file ****
+		sudo vi /usr/bin/start-jmeter.sh
+	2.3. start server on system boot : 
+		2.2.1 create systemctl service : 
+			2.2.1.1 cd /etc/systemd/system
+			2.2.1.2 sudo vi /etc/systemd/system/jmeter.service
+[Unit]
+Description=jmeter-server-deamon
+
+[Service]
+ExecStart=/usr/bin/apache-jmeter-5.6.2/bin/jmeter-server
+User=root
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target
+
+
+			2.2.1.3 sudo systemctl enable jmeter.service
+			2.2.1.4 sudo systemctl start jmeter.service
+			2.2.1.5 sudo systemctl status jmeter.service
+					sudo systemctl stop jmeter.service
+					sudo systemctl disable jmeter.service
+
+********************    Jmeter master setup *******************
+
+
+2. install jmeter server on master :
+	2.1  wget http://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.6.2.tgz
+	2.3  tar xf apache-jmeter-5.6.2.tgz
+	2.4 chmod 777 apache-jmeter-5.6.2
+	2.5 sudo apt-get update && sudo apt install openjdk-11-jre-headless
+	2.6 sudo cp -r apache-jmeter-5.6.2 /usr/bin/apache-jmeter-5.6.2
+
+3. changes 
+		ssl required to false and increase heap:
+			
+		sudo vi /usr/bin/apache-jmeter-5.6.2/bin/user.properties
+		modify :  server.rmi.ssl.Descriptionsable=true
+
+		sudo vi /usr/bin/apache-jmeter-5.6.2/bin/jmeter
+		modify xmx to 3 gb for 4 gb machine: "${HEAP:="-Xms3g -Xmx3g -XX:MaxMetaspaceSize=256m"}"
+
+		modify remote addresses 
+		sudo vi /usr/bin/apache-jmeter-5.6.2/bin/jmeter.properties
+		remote_hosts=<private ip 1, private ip 2>
+
+
+4. Install vnc server to create desktop in ubuntu :
+	Follow steps in  Remote_Ubuntu_GUI.txt 
+	and start vnc server once
+4. create desktop runnable
+	sudo vi ~/Desktop/ssh_home.desktop
+[Desktop Entry]
+Version=1.0
+Exec=/usr/bin/apache-jmeter-5.6.2/bin/jmeter
+Name=jmeter-master
+GenericName=jmeter-master
+Comment=start jmeter
+Encoding=UTF-8
+Terminal=Ffalse
+Type=Application
+Categories=Application;Network;
+
+4. If need to add ips in master :
+
+
+5. run a jmx file on server : 
+	3.1 /usr/bin/apache-jmeter-5.6.2/bin/jmeter -n -t google_test.jmx -R 172.31.3.69
+
+6. role to start stop jmeter instances : https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_examples_ec2-start-stop-match-tags.html
+	{
+    "Version": "2012-10-17",
+    "Statement": {
+        "Effect": "Allow",
+        "Action": [
+            "ec2:startInstances",
+            "ec2:stopInstances"
+        ],
+        "Resource": "*",
+        "Condition": {"StringEquals": 
+            {"aws:ResourceTag/CostCenter": "${aws:PrincipalTag/CostCenter}"}}
+    }
+}
+

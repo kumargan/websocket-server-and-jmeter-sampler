@@ -1,8 +1,0 @@
-
-
-put jar files in /etx folder to get websocket sampler on UI
-
-increase jmeter heap :
-
-/opt/homebrew/Cellar/jmeter/5.6.2/libexec/bin/jmeter
-
