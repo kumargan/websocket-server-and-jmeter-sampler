@@ -2,13 +2,6 @@
 
 
 
-scp google_test.jmx ubuntu@18.210.15.214:.
-
-scp -o ProxyCommand="ssh -p 22 -A -W %h:%p ec2-user@34.236.254.153" "/Users/hslh15412/ganesh/git repo/GeneralReferenceCode/jmeter-master-slave-setup-aws/google_test.jmx" "ubuntu@172.31.12.84:/home/ubuntu/google_test.jmx"
-
-scp "/Users/hslh15412/ganesh/git repo/GeneralReferenceCode/jmeter-master-slave-setup-aws/google_test.jmx" "ubuntu@3.235.136.188:/home/ubuntu/google_test.jmx"
-
-
 
 ********************    Jmeter slave setup *******************
 
@@ -62,14 +55,14 @@ WantedBy=multi-user.target
 	2.1  wget http://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.6.2.tgz
 	2.3  tar xf apache-jmeter-5.6.2.tgz
 	2.4 chmod 777 apache-jmeter-5.6.2
-	2.5 sudo apt-get update && sudo apt install openjdk-11-jre-headless
+	2.5 sudo apt-get update && sudo apt install openjdk-11-jdk
 	2.6 sudo cp -r apache-jmeter-5.6.2 /usr/bin/apache-jmeter-5.6.2
 
 3. changes 
 		ssl required to false and increase heap:
 			
 		sudo vi /usr/bin/apache-jmeter-5.6.2/bin/user.properties
-		modify :  server.rmi.ssl.Descriptionsable=true
+		modify :  server.rmi.ssl.disable=true
 
 		sudo vi /usr/bin/apache-jmeter-5.6.2/bin/jmeter
 		modify xmx to 3 gb for 4 gb machine: "${HEAP:="-Xms3g -Xmx3g -XX:MaxMetaspaceSize=256m"}"
@@ -115,4 +108,21 @@ Categories=Application;Network;
             {"aws:ResourceTag/CostCenter": "${aws:PrincipalTag/CostCenter}"}}
     }
 }
+
+
+
+Scp local files into remote : 
+
+	scp -o ProxyCommand="ssh -p 22 -A -W %h:%p ec2-user@10.30.96.34" "/Users/hslh15412/ganesh/git repo/websocket-server-and-jmeter-sampler/apache-jmeter-5.6.2.tgz" "ubuntu@10.30.96.55:/home/ubuntu/apache-jmeter-5.6.2.tgz"
+
+
+	scp -o ProxyCommand="ssh -p 22 -A -W %h:%p ec2-user@10.30.96.34" "/Users/hslh15412/ganesh/git repo/GeneralReferenceCode/jmeter-master-slave-setup-aws/google_test.jmx" "ubuntu@10.30.96.42:/home/ubuntu/google_test.jmx"
+
+
+
+scp "/Users/hslh15412/ganesh/git repo/GeneralReferenceCode/jmeter-master-slave-setup-aws/google_test.jmx" "ubuntu@10.30.96.55:/home/ubuntu/google_test.jmx"
+
+ssh -A -L 5901:localhost:5901 ec2-user@10.30.96.34 -t ssh -L 5901:localhost:5901 ubuntu@10.30.96.42
+
+
 
