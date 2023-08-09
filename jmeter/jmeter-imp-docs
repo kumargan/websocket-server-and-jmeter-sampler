@@ -11,6 +11,15 @@
 	2.3  tar xf apache-jmeter-5.6.2.tgz
 	2.4 chmod 777 apache-jmeter-5.6.2
 	2.5 sudo cp -r apache-jmeter-5.6.2 /usr/bin/apache-jmeter-5.6.2
+	2.6 add following jars for websocket :
+		1. mac : /opt/homebrew/Cellar/jmeter/5.6.2/libexec/lib/ext
+		2. ubuntu : /usr/bin/apache-jmeter-5.6.2/lib/ext
+		3. jar files : 
+			1. download  			:  https://github.com/kumargan/websocket-server-and-jmeter-sampler/blob/main/jmeter/jars%20for%20ext%20folder.zip
+			2. scp into remote 	:  scp -o ProxyCommand="ssh -p 22 -A -W %h:%p ec2-user@10.30.96.34" "/Users/hslh15412/ganesh/git_repo/websocket-server-and-jmeter-sampler/jmeter/jars_for_ext_folder.zip" "ubuntu@10.30.96.42:/home/ubuntu/jars_for_ext_folder.zip"
+
+			3. unzip : unzip jars_for_ext_folder.zip
+			4. move to ext folder : sudo mv jars_for_ext_folder/* /usr/bin/apache-jmeter-5.6.2/lib/ext/
 	2.6 sudo apt-get update && sudo apt-get install default-jre -y
 	2.6 change ssl required to false and increase heap:
 		sudo vi /usr/bin/apache-jmeter-5.6.2/bin/user.properties
@@ -53,8 +62,18 @@ WantedBy=multi-user.target
 
 2. install jmeter server on master :
 	2.1  wget http://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.6.2.tgz
-	2.3  tar xf apache-jmeter-5.6.2.tgz
-	2.4 chmod 777 apache-jmeter-5.6.2
+	2.2  tar xf apache-jmeter-5.6.2.tgz
+	2.3 chmod 777 apache-jmeter-5.6.2
+	2.4 add following jars for websocket :
+		1. mac : /opt/homebrew/Cellar/jmeter/5.6.2/libexec/lib/ext
+		2. ubuntu : /usr/bin/apache-jmeter-5.6.2/lib/ext
+		3. jar files : 
+			1. download  			:  https://github.com/kumargan/websocket-server-and-jmeter-sampler/blob/main/jmeter/jars%20for%20ext%20folder.zip
+			2. scp into remote 	:  scp -o ProxyCommand="ssh -p 22 -A -W %h:%p ec2-user@10.30.96.34" "/Users/hslh15412/ganesh/git_repo/websocket-server-and-jmeter-sampler/jmeter/jars_for_ext_folder.zip" "ubuntu@10.30.96.42:/home/ubuntu/jars_for_ext_folder.zip"
+
+			3. unzip : unzip jars_for_ext_folder.zip
+			4. move to ext folder : sudo mv jars_for_ext_folder/* /usr/bin/apache-jmeter-5.6.2/lib/ext/
+			
 	2.5 sudo apt-get update && sudo apt install openjdk-11-jdk
 	2.6 sudo cp -r apache-jmeter-5.6.2 /usr/bin/apache-jmeter-5.6.2
 
@@ -89,7 +108,7 @@ Type=Application
 Categories=Application;Network;
 
 4. If need to add ips in master :
-
+	
 
 5. run a jmx file on server : 
 	3.1 /usr/bin/apache-jmeter-5.6.2/bin/jmeter -n -t google_test.jmx -R 172.31.3.69
@@ -114,6 +133,7 @@ Categories=Application;Network;
 Scp local files into remote : 
 
 	scp -o ProxyCommand="ssh -p 22 -A -W %h:%p ec2-user@10.30.96.34" "/Users/hslh15412/ganesh/git repo/websocket-server-and-jmeter-sampler/apache-jmeter-5.6.2.tgz" "ubuntu@10.30.96.55:/home/ubuntu/apache-jmeter-5.6.2.tgz"
+
 
 
 	scp -o ProxyCommand="ssh -p 22 -A -W %h:%p ec2-user@10.30.96.34" "/Users/hslh15412/ganesh/git repo/GeneralReferenceCode/jmeter-master-slave-setup-aws/google_test.jmx" "ubuntu@10.30.96.42:/home/ubuntu/google_test.jmx"
