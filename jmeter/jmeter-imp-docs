@@ -108,7 +108,8 @@ Type=Application
 Categories=Application;Network;
 
 4. If need to add ips in master :
-	
+	sudo vi /usr/bin/apache-jmeter-5.6.2/bin/jmeter.properties
+	remote_hosts = <1p1,ip2,..>
 
 5. run a jmx file on server : 
 	3.1 /usr/bin/apache-jmeter-5.6.2/bin/jmeter -n -t google_test.jmx -R 172.31.3.69
