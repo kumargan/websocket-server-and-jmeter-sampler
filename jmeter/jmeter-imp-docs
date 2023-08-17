@@ -141,8 +141,10 @@ Scp local files into remote :
 	scp -o ProxyCommand="ssh -p 22 -A -W %h:%p ec2-user@10.30.96.34" "/Users/hslh15412/ganesh/git_repo/websocket-server-and-jmeter-sampler/jmeter/beanstalk_test.jmx" "ubuntu@10.30.96.42:/home/ubuntu/beanstalk_test.jmx"
 
 
-	scp -o ProxyCommand="ssh -p 22 -A -W %h:%p ec2-user@10.30.96.34" "/Users/hslh15412/ganesh/projects/jmeter/sky_uat_octopus_test.jmx" "ubuntu@10.30.96.42:/home/ubuntu/sky_uat_octopus_test.jmx"
+	scp -o ProxyCommand="ssh -p 22 -A -W %h:%p ec2-user@10.30.96.34" "/Users/hslh15412/ganesh/git_repo/websocket-server-and-jmeter-sampler/jmeter/sky_uat_octopus_test.jmx" "ubuntu@10.30.96.42:/home/ubuntu/sky_uat_octopus_test.jmx"
 
+
+   /usr/bin/apache-jmeter-5.6.2/bin/jmeter -n -t sky_uat_octopus_test.jmx -l result.csv
 
 
 scp "/Users/hslh15412/ganesh/git_repo/websocket-server-and-jmeter-sampler/jmeter/read\ continuation\ frames.jmx" "ubuntu@10.30.96.55:/home/ubuntu/google_test.jmx"
